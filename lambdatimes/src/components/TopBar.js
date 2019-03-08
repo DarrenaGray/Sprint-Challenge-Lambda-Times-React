@@ -1,10 +1,40 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Input } from 'reactstrap';
 
 // Refactor this component to use styled components and not classNames. 
 // You can find the corresponding CSS in the CSS/index.css file
 
-const TopBar = () => {
+class TopBar extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      username: '',
+      password: '',
+      modal: false
+    };
+
+
+  }
+
+  login = e => {
+    e.preventDefault()
+    localStorage.setItem('user', this.state.username)
+    window.location.reload();
+  }
+
+  handleChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
+  toggle = () => {
+    this.setState(prevState => ({
+      modal: !prevState.modal
+    }));
+  }
+  render() {
   return (
     <TopBarDiv>
       <Container>
@@ -15,13 +45,49 @@ const TopBar = () => {
          <ContainerCenterSpan>GENERAL</ContainerCenterSpan><ContainerCenterSpan>BROWNBAG</ContainerCenterSpan><ContainerCenterSpan>RANDOM</ContainerCenterSpan><ContainerCenterSpan>MUSIC</ContainerCenterSpan><ContainerCenterSpan>ANNOUNCEMENTS</ContainerCenterSpan>
         </ContainerCenter>
         <ContainerRight>
-          <ContainerRightSpan>LOG IN</ContainerRightSpan>
-        </ContainerRight>
-      </Container>
-    </TopBarDiv>
-  )
-}
+          <Button onClick={this.toggle}>LOG IN</Button>
+          <Modal isOpen={this.state.modal} toggle={this.toggle}>
+              <ModalHeader toggle={this.toggle}>Login</ModalHeader>
+              <ModalBody>
+              <Form>
+                    <FormGroup>
+                        <Input 
+                            type="username"
+                            name="username"
+                            placeholder="Username"
+                            onChange={this.handleChange}
+                            value={this.state.username}
+                            required
+                        />
+                        <Input 
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            onChange={this.handleChange}
+                            value-={this.state.password}
+                            required
+                        />
+                    </FormGroup>
+                </Form>
+              </ModalBody>
+              <ModalFooter>
+                <Button 
+                  onClick={this.logIn}
+                  type="submit">Login 
+                </Button>
+                <Button 
+                  color="secondary" 
+                  onClick={this.toggle}>Cancel
+                </Button>
+                </ModalFooter>
+              </Modal>
+          </ContainerRight>
+        </Container>
+      </TopBarDiv>
+    )
+  }
 
+}
 // Style Components
 
 const TopBarDiv = styled.div`
@@ -96,7 +162,7 @@ const ContainerRight = styled.div`
   font-weight: bold;
 `
 
-const ContainerRightSpan = styled.span`
+const Button = styled.span`
   cursor: pointer;
 `
 
